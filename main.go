@@ -1,5 +1,7 @@
 package main
 
+import "github.com/ehrenmurdick/container_talk/container"
+
 func main() {
-	print("hello world!")
+	print(container.Exported())
 }
