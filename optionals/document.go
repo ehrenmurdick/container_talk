@@ -1,13 +1,15 @@
 package optionals
 
 import (
-	"../entities"
+	"github.com/ehrenmurdick/container_talk/entities"
 )
 
 type OptionalDocument interface {
 	FlatMap(func(entities.Document) (entities.Document, error)) OptionalDocument
 	HandleErr(func(error) error) OptionalDocument
 	Print() OptionalDocument
+	Save(filename string) OptionalDocument
+	PrintErr() OptionalDocument
 }
 
 type someDocument struct {
@@ -48,6 +50,17 @@ func (n noneDocument) HandleErr(f func(error) error) OptionalDocument {
 	}
 }
 
+func (s someDocument) PrintErr() OptionalDocument {
+	return s
+}
+
+func (n noneDocument) PrintErr() OptionalDocument {
+	return n.HandleErr(func(err error) error {
+		println(err.Error())
+		return err
+	})
+}
+
 func (s someDocument) Print() OptionalDocument {
 	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
 		return d, d.Print()
@@ -55,5 +68,15 @@ func (s someDocument) Print() OptionalDocument {
 }
 
 func (n noneDocument) Print() OptionalDocument {
+	return n
+}
+
+func (s someDocument) Save(filename string) OptionalDocument {
+	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
+		return d, d.Save(filename)
+	})
+}
+
+func (n noneDocument) Save(filename string) OptionalDocument {
 	return n
 }

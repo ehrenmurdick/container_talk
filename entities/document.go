@@ -4,11 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"os"
 )
 
 type Document interface {
 	Content() string
 	Print() error
+	Save(string) error
 }
 
 type document struct {
@@ -16,7 +18,7 @@ type document struct {
 }
 
 func NewDocument(content string) Document {
-	return document{
+	return &document{
 		content: content,
 	}
 }
@@ -44,4 +46,21 @@ func (d document) Print() error {
 	} else {
 		return err
 	}
+}
+
+func (d *document) Save(filename string) error {
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	n, err := f.WriteString(d.content)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("wrote %d bytes\n", n)
+
+	f.Sync()
+	return nil
 }
