@@ -1,8 +1,8 @@
 package optionals
 
-import (
+<% if package %>import (
 	"<%= package %>"
-)
+)<% end %>
 
 type Optional<%= name %> interface {
 	FlatMap(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>

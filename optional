@@ -1,20 +1,20 @@
 #!/usr/bin/env ruby
 
 name, type, package = ARGV[0..2]
-outfile = "../optionals/#{name.downcase}.go"
+outfile = "optionals/#{name.downcase}.go"
 
-methods = ARGV[3..-1]
+methods = ARGV[3..-1] || []
 
 require 'erb'
 
-template = ERB.new(File.read("../optionals/template.go.erb"))
+template = ERB.new(File.read("optionals/template.go.erb"))
 contents = template.result(binding)
 
 File.open(outfile, 'w+') do |f|
   f.write(contents)
 
   methods.each do |msg|
-    template = ERB.new(File.read("../optionals/method.go.erb"))
+    template = ERB.new(File.read("optionals/method.go.erb"))
     contents = template.result(binding)
     f.write(contents)
   end
