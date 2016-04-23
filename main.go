@@ -1,7 +1,12 @@
 package main
 
-import "github.com/ehrenmurdick/container_talk/container"
+import "github.com/ehrenmurdick/container_talk/optionals"
 
 func main() {
-	print(container.Exported())
+	c := optionals.String("Hello world!\n")
+
+	c.FlatMap(func(s string) string {
+		print(s)
+		return s
+	})
 }
