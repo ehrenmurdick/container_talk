@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ehrenmurdick/container_talk/optionals"
+	"./optionals"
 	"math/rand"
 	"time"
 )
