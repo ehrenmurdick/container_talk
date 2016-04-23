@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-//go:generate ../gen_optional Document entities.Document github.com/ehrenmurdick/container_talk/entities Print Save
+//go:generate ../optional Document entities.Document github.com/ehrenmurdick/container_talk/entities Print Save
 
 type Document interface {
 	Content() string
