@@ -33,7 +33,7 @@ var tries int = 0
 
 func maybeError() error {
 	tries++
-	if rand.Intn(10) > 5 {
+	if rand.Intn(10) > 7 {
 		return errors.New(fmt.Sprintf("failed on attempt %v", tries))
 	} else {
 		return nil

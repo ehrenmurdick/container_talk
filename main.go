@@ -1,7 +1,5 @@
 package main
 
-//go:generate go generate entities/document.go
-
 import (
 	"github.com/ehrenmurdick/container_talk/entities"
 	"github.com/ehrenmurdick/container_talk/optionals"
