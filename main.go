@@ -1,33 +1,21 @@
 package main
 
 import (
-	"errors"
 	"github.com/ehrenmurdick/container_talk/optionals"
+	"math/rand"
+	"time"
 )
 
-func p(s *string) *string {
-	print(*s)
-	return s
-}
-
-var willFail bool = false
-
-func couldFail() (string, error) {
-	if willFail {
-		return "", errors.New("failed")
-	} else {
-		willFail = true
-		return "success", nil
-	}
-}
-
 func main() {
-	var c optionals.OptionalString
+	rand.Seed(time.Now().UTC().UnixNano())
 
-	c = optionals.String(nil)
-	c.FlatMap(p)
+	c := optionals.String("hello, world!", nil)
+	for x := 0; x < 10; x++ {
+		c = c.Print()
+	}
 
-	var s string = "hello\n"
-	c = optionals.String(&s)
-	c.FlatMap(p)
+	c.HandleErr(func(e error) error {
+		println(e.Error())
+		return e
+	})
 }
