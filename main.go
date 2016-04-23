@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./entities"
 	"./optionals"
 	"math/rand"
 	"time"
@@ -9,12 +10,14 @@ import (
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	c := optionals.String("hello, world!", nil)
+	doc := entities.NewDocument("hello, world!")
+	opt := optionals.WrapDocument(doc, nil)
+
 	for x := 0; x < 10; x++ {
-		c = c.Print()
+		opt = opt.Print()
 	}
 
-	c.HandleErr(func(e error) error {
+	opt.HandleErr(func(e error) error {
 		println(e.Error())
 		return e
 	})
