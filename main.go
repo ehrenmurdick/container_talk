@@ -1,12 +1,33 @@
 package main
 
-import "github.com/ehrenmurdick/container_talk/optionals"
+import (
+	"errors"
+	"github.com/ehrenmurdick/container_talk/optionals"
+)
+
+func p(s *string) *string {
+	print(*s)
+	return s
+}
+
+var willFail bool = false
+
+func couldFail() (string, error) {
+	if willFail {
+		return "", errors.New("failed")
+	} else {
+		willFail = true
+		return "success", nil
+	}
+}
 
 func main() {
-	c := optionals.String("Hello world!\n")
+	var c optionals.OptionalString
 
-	c.FlatMap(func(s string) string {
-		print(s)
-		return s
-	})
+	c = optionals.String(nil)
+	c.FlatMap(p)
+
+	var s string = "hello\n"
+	c = optionals.String(&s)
+	c.FlatMap(p)
 }

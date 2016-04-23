@@ -1,19 +1,29 @@
 package optionals
 
 type OptionalString interface {
-	FlatMap(func(string) string) OptionalString
+	FlatMap(func(*string) *string) OptionalString
 }
 
-type optionalString struct {
-	value string
+type someString struct {
+	value *string
 }
 
-func String(s string) OptionalString {
-	return optionalString{
+type noneString struct{}
+
+func String(s *string) OptionalString {
+	if s == nil {
+		return noneString{}
+	}
+
+	return someString{
 		value: s,
 	}
 }
 
-func (s optionalString) FlatMap(f func(string) string) OptionalString {
+func (s someString) FlatMap(f func(*string) *string) OptionalString {
 	return String(f(s.value))
+}
+
+func (s noneString) FlatMap(f func(*string) *string) OptionalString {
+	return noneString{}
 }
