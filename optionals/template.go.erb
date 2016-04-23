@@ -1,0 +1,62 @@
+package optionals
+
+import (
+	"<%= package %>"
+)
+
+type Optional<%= name %> interface {
+	FlatMap(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>
+	HandleErr(func(error) error) Optional<%= name %>
+	PrintErr() Optional<%= name %>
+
+<% methods.each do |m| %>  <%= m %>() Optional<%= name %>
+<% end %>}
+
+type some<%= name %> struct {
+	value <%= type %>
+}
+
+type none<%= name %> struct {
+	err error
+}
+
+func Wrap<%= name %>(s <%= type %>, e error) Optional<%= name %> {
+	if e != nil {
+		return none<%= name %>{
+			err: e,
+		}
+	}
+
+	return some<%= name %>{
+		value: s,
+	}
+}
+
+func (s some<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+	return Wrap<%= name %>(f(s.value))
+}
+
+func (n none<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+	return n
+}
+
+func (s some<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
+	return s
+}
+
+func (n none<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
+	return none<%= name %>{
+		err: f(n.err),
+	}
+}
+
+func (s some<%= name %>) PrintErr() Optional<%= name %> {
+	return s
+}
+
+func (n none<%= name %>) PrintErr() Optional<%= name %> {
+	return n.HandleErr(func(err error) error {
+		println(err.Error())
+		return err
+	})
+}

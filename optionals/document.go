@@ -7,9 +7,10 @@ import (
 type OptionalDocument interface {
 	FlatMap(func(entities.Document) (entities.Document, error)) OptionalDocument
 	HandleErr(func(error) error) OptionalDocument
-	Print() OptionalDocument
-	Save(filename string) OptionalDocument
 	PrintErr() OptionalDocument
+
+  Print() OptionalDocument
+  Save() OptionalDocument
 }
 
 type someDocument struct {
@@ -60,7 +61,6 @@ func (n noneDocument) PrintErr() OptionalDocument {
 		return err
 	})
 }
-
 func (s someDocument) Print() OptionalDocument {
 	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
 		return d, d.Print()
@@ -71,12 +71,13 @@ func (n noneDocument) Print() OptionalDocument {
 	return n
 }
 
-func (s someDocument) Save(filename string) OptionalDocument {
+func (s someDocument) Save() OptionalDocument {
 	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
-		return d, d.Save(filename)
+		return d, d.Save()
 	})
 }
 
-func (n noneDocument) Save(filename string) OptionalDocument {
+func (n noneDocument) Save() OptionalDocument {
 	return n
 }
+

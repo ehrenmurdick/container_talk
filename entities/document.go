@@ -7,10 +7,12 @@ import (
 	"os"
 )
 
+//go:generate ../gen_optional Document entities.Document github.com/ehrenmurdick/container_talk/entities Print Save
+
 type Document interface {
 	Content() string
 	Print() error
-	Save(string) error
+	Save() error
 }
 
 type document struct {
@@ -48,8 +50,8 @@ func (d document) Print() error {
 	}
 }
 
-func (d *document) Save(filename string) error {
-	f, err := os.Create(filename)
+func (d document) Save() error {
+	f, err := os.Create("file")
 	if err != nil {
 		return err
 	}
@@ -59,7 +61,7 @@ func (d *document) Save(filename string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("wrote %d bytes\n", n)
+	fmt.Printf("wrote %d bytes to `file`\n", n)
 
 	f.Sync()
 	return nil

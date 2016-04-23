@@ -15,6 +15,6 @@ func main() {
 
 	opt.
 		Print().
-		Save("file").
+		Save().
 		PrintErr()
 }
