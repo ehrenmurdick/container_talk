@@ -9,6 +9,7 @@ import (
 
 type Document interface {
 	Content() string
+	ToString() string
 	Print() error
 	Save() error
 }
@@ -63,4 +64,8 @@ func (d document) Save() error {
 
 	f.Sync()
 	return nil
+}
+
+func (d document) ToString() string {
+	return d.content
 }

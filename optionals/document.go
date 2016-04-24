@@ -8,76 +8,88 @@ type OptionalDocument interface {
 	FlatMap(func(entities.Document) (entities.Document, error)) OptionalDocument
 	HandleErr(func(error) error) OptionalDocument
 	PrintErr() OptionalDocument
+	ToString() OptionalString
 
-  Print() OptionalDocument
-  Save() OptionalDocument
+	Print() OptionalDocument
+	Save() OptionalDocument
 }
 
-type someDocument struct {
+type SomeDocument struct {
 	value entities.Document
 }
 
-type noneDocument struct {
+type NoneDocument struct {
 	err error
 }
 
 func WrapDocument(s entities.Document, e error) OptionalDocument {
 	if e != nil {
-		return noneDocument{
+		return NoneDocument{
 			err: e,
 		}
 	}
 
-	return someDocument{
+	return SomeDocument{
 		value: s,
 	}
 }
 
-func (s someDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
+func (s SomeDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
 	return WrapDocument(f(s.value))
 }
 
-func (n noneDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
+func (n NoneDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
 	return n
 }
 
-func (s someDocument) HandleErr(f func(error) error) OptionalDocument {
+func (s SomeDocument) HandleErr(f func(error) error) OptionalDocument {
 	return s
 }
 
-func (n noneDocument) HandleErr(f func(error) error) OptionalDocument {
-	return noneDocument{
+func (n NoneDocument) HandleErr(f func(error) error) OptionalDocument {
+	return NoneDocument{
 		err: f(n.err),
 	}
 }
 
-func (s someDocument) PrintErr() OptionalDocument {
+func (s SomeDocument) PrintErr() OptionalDocument {
 	return s
 }
 
-func (n noneDocument) PrintErr() OptionalDocument {
+func (n NoneDocument) PrintErr() OptionalDocument {
 	return n.HandleErr(func(err error) error {
 		println(err.Error())
 		return err
 	})
 }
-func (s someDocument) Print() OptionalDocument {
+
+func (s SomeDocument) ToString() OptionalString {
+
+	return WrapString(s.value.ToString(), nil)
+
+}
+
+func (n NoneDocument) ToString() OptionalString {
+	return NoneString{
+		err: n.err,
+	}
+}
+func (s SomeDocument) Print() OptionalDocument {
 	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
 		return d, d.Print()
 	})
 }
 
-func (n noneDocument) Print() OptionalDocument {
+func (n NoneDocument) Print() OptionalDocument {
 	return n
 }
 
-func (s someDocument) Save() OptionalDocument {
+func (s SomeDocument) Save() OptionalDocument {
 	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
 		return d, d.Save()
 	})
 }
 
-func (n noneDocument) Save() OptionalDocument {
+func (n NoneDocument) Save() OptionalDocument {
 	return n
 }
-

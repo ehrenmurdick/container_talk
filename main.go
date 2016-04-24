@@ -1,7 +1,6 @@
 package main
 
 //go:generate ./optional Document entities.Document github.com/ehrenmurdick/container_talk/entities Print Save
-
 //go:generate ./optional String string
 
 import (
@@ -21,11 +20,18 @@ func main() {
 	opt.
 		Print().
 		Save().
+		ToString().
 		FlatMap(printLen).
+		FlatMap(echo).
 		PrintErr()
 }
 
-func printLen(d entities.Document) (entities.Document, error) {
-	fmt.Printf("document is %v bytes in length\n", len(d.Content()))
-	return d, nil
+func echo(str string) (string, error) {
+	println(str)
+	return str, nil
+}
+
+func printLen(str string) (string, error) {
+	fmt.Printf("string is %v bytes in length\n", len(str))
+	return str, nil
 }

@@ -4,53 +4,66 @@ type OptionalString interface {
 	FlatMap(func(string) (string, error)) OptionalString
 	HandleErr(func(error) error) OptionalString
 	PrintErr() OptionalString
+	ToString() OptionalString
 }
 
-type someString struct {
+type SomeString struct {
 	value string
 }
 
-type noneString struct {
+type NoneString struct {
 	err error
 }
 
 func WrapString(s string, e error) OptionalString {
 	if e != nil {
-		return noneString{
+		return NoneString{
 			err: e,
 		}
 	}
 
-	return someString{
+	return SomeString{
 		value: s,
 	}
 }
 
-func (s someString) FlatMap(f func(string) (string, error)) OptionalString {
+func (s SomeString) FlatMap(f func(string) (string, error)) OptionalString {
 	return WrapString(f(s.value))
 }
 
-func (n noneString) FlatMap(f func(string) (string, error)) OptionalString {
+func (n NoneString) FlatMap(f func(string) (string, error)) OptionalString {
 	return n
 }
 
-func (s someString) HandleErr(f func(error) error) OptionalString {
+func (s SomeString) HandleErr(f func(error) error) OptionalString {
 	return s
 }
 
-func (n noneString) HandleErr(f func(error) error) OptionalString {
-	return noneString{
+func (n NoneString) HandleErr(f func(error) error) OptionalString {
+	return NoneString{
 		err: f(n.err),
 	}
 }
 
-func (s someString) PrintErr() OptionalString {
+func (s SomeString) PrintErr() OptionalString {
 	return s
 }
 
-func (n noneString) PrintErr() OptionalString {
+func (n NoneString) PrintErr() OptionalString {
 	return n.HandleErr(func(err error) error {
 		println(err.Error())
 		return err
 	})
+}
+
+func (s SomeString) ToString() OptionalString {
+
+	return WrapString(s.value, nil)
+
+}
+
+func (n NoneString) ToString() OptionalString {
+	return NoneString{
+		err: n.err,
+	}
 }

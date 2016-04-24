@@ -1,10 +1,10 @@
-func (s some<%= name %>) <%= msg %>() Optional<%= name %> {
+func (s Some<%= name %>) <%= msg %>() Optional<%= name %> {
 	return s.FlatMap(func(d <%= type %>) (<%= type %>, error) {
 		return d, d.<%= msg %>()
 	})
 }
 
-func (n none<%= name %>) <%= msg %>() Optional<%= name %> {
+func (n None<%= name %>) <%= msg %>() Optional<%= name %> {
 	return n
 }
 

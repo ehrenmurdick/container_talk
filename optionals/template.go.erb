@@ -8,55 +8,70 @@ type Optional<%= name %> interface {
 	FlatMap(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>
 	HandleErr(func(error) error) Optional<%= name %>
 	PrintErr() Optional<%= name %>
+	ToString() OptionalString
 
 <% methods.each do |m| %>  <%= m %>() Optional<%= name %>
 <% end %>}
 
-type some<%= name %> struct {
+type Some<%= name %> struct {
 	value <%= type %>
 }
 
-type none<%= name %> struct {
+type None<%= name %> struct {
 	err error
 }
 
 func Wrap<%= name %>(s <%= type %>, e error) Optional<%= name %> {
 	if e != nil {
-		return none<%= name %>{
+		return None<%= name %>{
 			err: e,
 		}
 	}
 
-	return some<%= name %>{
+	return Some<%= name %>{
 		value: s,
 	}
 }
 
-func (s some<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+func (s Some<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
 	return Wrap<%= name %>(f(s.value))
 }
 
-func (n none<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+func (n None<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
 	return n
 }
 
-func (s some<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
+func (s Some<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
 	return s
 }
 
-func (n none<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
-	return none<%= name %>{
+func (n None<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
+	return None<%= name %>{
 		err: f(n.err),
 	}
 }
 
-func (s some<%= name %>) PrintErr() Optional<%= name %> {
+func (s Some<%= name %>) PrintErr() Optional<%= name %> {
 	return s
 }
 
-func (n none<%= name %>) PrintErr() Optional<%= name %> {
+func (n None<%= name %>) PrintErr() Optional<%= name %> {
 	return n.HandleErr(func(err error) error {
 		println(err.Error())
 		return err
 	})
+}
+
+func (s Some<%= name %>) ToString() OptionalString {
+	<% if type != 'string' %>
+		return WrapString(s.value.ToString(), nil)
+	<% else %>
+		return WrapString(s.value, nil)
+	<% end %>
+}
+
+func (n None<%= name %>) ToString() OptionalString {
+	return NoneString{
+		err: n.err,
+	}
 }
