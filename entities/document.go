@@ -3,7 +3,6 @@ package entities
 import (
 	"errors"
 	"fmt"
-	"math/rand"
 	"os"
 )
 
@@ -38,25 +37,9 @@ func (d document) SetContent(s string) (Document, error) {
 	}
 }
 
-var tries int = 0
-
-func maybeError() error {
-	tries++
-	if rand.Intn(10) > 7 {
-		return errors.New(fmt.Sprintf("failed on attempt %v", tries))
-	} else {
-		return nil
-	}
-}
-
 func (d document) Print() error {
-	err := maybeError()
-	if err == nil {
-		println(d.content)
-		return nil
-	} else {
-		return err
-	}
+	println(d.content)
+	return nil
 }
 
 func (d document) Save() error {

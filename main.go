@@ -7,13 +7,9 @@ import "errors"
 import (
 	"github.com/ehrenmurdick/container_talk/entities"
 	"github.com/ehrenmurdick/container_talk/optionals"
-	"math/rand"
-	"time"
 )
 
 func main() {
-	rand.Seed(time.Now().UTC().UnixNano())
-
 	doc0 := entities.NewDocument("document 1")
 	_, err := printDocument(doc0)
 	if err != nil {
