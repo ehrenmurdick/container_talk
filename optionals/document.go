@@ -1,8 +1,6 @@
 package optionals
 
-import (
-	"github.com/ehrenmurdick/container_talk/entities"
-)
+import "github.com/ehrenmurdick/container_talk/entities"
 
 type OptionalDocument interface {
 	Try(func(entities.Document) (entities.Document, error)) OptionalDocument

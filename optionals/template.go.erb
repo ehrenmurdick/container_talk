@@ -1,8 +1,6 @@
 package optionals
 
-<% if package %>import (
-	"<%= package %>"
-)<% end %>
+import "github.com/ehrenmurdick/container_talk/entities"
 
 type Optional<%= name %> interface {
 	Try(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>

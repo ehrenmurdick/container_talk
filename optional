@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-name, type, package = ARGV[0..2]
+name, type = ARGV[0..1]
 outfile = "optionals/#{name.downcase}.go"
 
-methods = ARGV[3..-1] || []
+methods = ARGV[2..-1] || []
 
 require 'erb'
 
