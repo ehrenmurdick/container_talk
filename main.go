@@ -2,7 +2,7 @@ package main
 
 import "errors"
 
-//go:generate ./optional Document entities.Document Print Save
+//go:generate ./optional Document Print Save
 
 import (
 	"github.com/ehrenmurdick/container_talk/entities"
