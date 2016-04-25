@@ -5,7 +5,7 @@ package optionals
 )<% end %>
 
 type Optional<%= name %> interface {
-	FlatMap(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>
+	Try(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>
 	HandleErr(func(error) error) Optional<%= name %>
 	PrintErr() Optional<%= name %>
 	ToString() OptionalString
@@ -33,11 +33,11 @@ func Wrap<%= name %>(s <%= type %>, e error) Optional<%= name %> {
 	}
 }
 
-func (s Some<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+func (s Some<%= name %>) Try(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
 	return Wrap<%= name %>(f(s.value))
 }
 
-func (n None<%= name %>) FlatMap(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
+func (n None<%= name %>) Try(f func(<%= type %>) (<%= type %>, error)) Optional<%= name %> {
 	return n
 }
 

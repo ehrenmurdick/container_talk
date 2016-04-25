@@ -34,16 +34,16 @@ func main() {
 	doc1 := entities.NewDocument("document 2")
 	opt1 := optionals.WrapAny(doc1, nil)
 	opt1.
-		FlatMap(printAny).
-		FlatMap(saveAny).
+		Try(printAny).
+		Try(saveAny).
 		HandleErr(printError)
 
 	doc2 := entities.NewDocument("document 3")
 	opt2 := optionals.WrapDocument(doc2, nil)
 
 	opt2.
-		FlatMap(printDocument).
-		FlatMap(saveDocument).
+		Try(printDocument).
+		Try(saveDocument).
 		HandleErr(printError)
 }
 

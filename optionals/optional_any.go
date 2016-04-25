@@ -1,7 +1,7 @@
 package optionals
 
 type OptionalAny interface {
-	FlatMap(f func(interface{}) (interface{}, error)) OptionalAny
+	Try(f func(interface{}) (interface{}, error)) OptionalAny
 	HandleErr(f func(error) error) OptionalAny
 }
 
@@ -24,11 +24,11 @@ func WrapAny(s interface{}, e error) OptionalAny {
 	}
 }
 
-func (s SomeAny) FlatMap(f func(interface{}) (interface{}, error)) OptionalAny {
+func (s SomeAny) Try(f func(interface{}) (interface{}, error)) OptionalAny {
 	return WrapAny(f(s.value))
 }
 
-func (n NoneAny) FlatMap(f func(interface{}) (interface{}, error)) OptionalAny {
+func (n NoneAny) Try(f func(interface{}) (interface{}, error)) OptionalAny {
 	return n
 }
 

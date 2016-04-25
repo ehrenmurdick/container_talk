@@ -1,5 +1,5 @@
 func (s Some<%= name %>) <%= msg %>() Optional<%= name %> {
-	return s.FlatMap(func(d <%= type %>) (<%= type %>, error) {
+	return s.Try(func(d <%= type %>) (<%= type %>, error) {
 		return d, d.<%= msg %>()
 	})
 }

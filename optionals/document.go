@@ -5,7 +5,7 @@ import (
 )
 
 type OptionalDocument interface {
-	FlatMap(func(entities.Document) (entities.Document, error)) OptionalDocument
+	Try(func(entities.Document) (entities.Document, error)) OptionalDocument
 	HandleErr(func(error) error) OptionalDocument
 	PrintErr() OptionalDocument
 	ToString() OptionalString
@@ -34,11 +34,11 @@ func WrapDocument(s entities.Document, e error) OptionalDocument {
 	}
 }
 
-func (s SomeDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
+func (s SomeDocument) Try(f func(entities.Document) (entities.Document, error)) OptionalDocument {
 	return WrapDocument(f(s.value))
 }
 
-func (n NoneDocument) FlatMap(f func(entities.Document) (entities.Document, error)) OptionalDocument {
+func (n NoneDocument) Try(f func(entities.Document) (entities.Document, error)) OptionalDocument {
 	return n
 }
 
@@ -75,7 +75,7 @@ func (n NoneDocument) ToString() OptionalString {
 	}
 }
 func (s SomeDocument) Print() OptionalDocument {
-	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
+	return s.Try(func(d entities.Document) (entities.Document, error) {
 		return d, d.Print()
 	})
 }
@@ -85,7 +85,7 @@ func (n NoneDocument) Print() OptionalDocument {
 }
 
 func (s SomeDocument) Save() OptionalDocument {
-	return s.FlatMap(func(d entities.Document) (entities.Document, error) {
+	return s.Try(func(d entities.Document) (entities.Document, error) {
 		return d, d.Save()
 	})
 }

@@ -1,7 +1,7 @@
 package optionals
 
 type OptionalString interface {
-	FlatMap(func(string) (string, error)) OptionalString
+	Try(func(string) (string, error)) OptionalString
 	HandleErr(func(error) error) OptionalString
 	PrintErr() OptionalString
 	ToString() OptionalString
@@ -27,11 +27,11 @@ func WrapString(s string, e error) OptionalString {
 	}
 }
 
-func (s SomeString) FlatMap(f func(string) (string, error)) OptionalString {
+func (s SomeString) Try(f func(string) (string, error)) OptionalString {
 	return WrapString(f(s.value))
 }
 
-func (n NoneString) FlatMap(f func(string) (string, error)) OptionalString {
+func (n NoneString) Try(f func(string) (string, error)) OptionalString {
 	return n
 }
 
