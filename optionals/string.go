@@ -1,10 +1,11 @@
 package optionals
 
+
+
 type OptionalString interface {
 	Try(func(string) (string, error)) OptionalString
 	HandleErr(func(error) error) OptionalString
-	PrintErr() OptionalString
-	ToString() OptionalString
+
 }
 
 type SomeString struct {
@@ -45,25 +46,3 @@ func (n NoneString) HandleErr(f func(error) error) OptionalString {
 	}
 }
 
-func (s SomeString) PrintErr() OptionalString {
-	return s
-}
-
-func (n NoneString) PrintErr() OptionalString {
-	return n.HandleErr(func(err error) error {
-		println(err.Error())
-		return err
-	})
-}
-
-func (s SomeString) ToString() OptionalString {
-
-	return WrapString(s.value, nil)
-
-}
-
-func (n NoneString) ToString() OptionalString {
-	return NoneString{
-		err: n.err,
-	}
-}

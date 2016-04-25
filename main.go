@@ -40,7 +40,6 @@ func main() {
 
 	doc2 := entities.NewDocument("document 3")
 	opt2 := optionals.WrapDocument(doc2, nil)
-
 	opt2.
 		Try(printDocument).
 		Try(saveDocument).

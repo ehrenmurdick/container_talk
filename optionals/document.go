@@ -7,11 +7,9 @@ import (
 type OptionalDocument interface {
 	Try(func(entities.Document) (entities.Document, error)) OptionalDocument
 	HandleErr(func(error) error) OptionalDocument
-	PrintErr() OptionalDocument
-	ToString() OptionalString
 
-	Print() OptionalDocument
-	Save() OptionalDocument
+  Print() OptionalDocument
+  Save() OptionalDocument
 }
 
 type SomeDocument struct {
@@ -52,28 +50,6 @@ func (n NoneDocument) HandleErr(f func(error) error) OptionalDocument {
 	}
 }
 
-func (s SomeDocument) PrintErr() OptionalDocument {
-	return s
-}
-
-func (n NoneDocument) PrintErr() OptionalDocument {
-	return n.HandleErr(func(err error) error {
-		println(err.Error())
-		return err
-	})
-}
-
-func (s SomeDocument) ToString() OptionalString {
-
-	return WrapString(s.value.ToString(), nil)
-
-}
-
-func (n NoneDocument) ToString() OptionalString {
-	return NoneString{
-		err: n.err,
-	}
-}
 func (s SomeDocument) Print() OptionalDocument {
 	return s.Try(func(d entities.Document) (entities.Document, error) {
 		return d, d.Print()
@@ -93,3 +69,4 @@ func (s SomeDocument) Save() OptionalDocument {
 func (n NoneDocument) Save() OptionalDocument {
 	return n
 }
+

@@ -7,8 +7,6 @@ package optionals
 type Optional<%= name %> interface {
 	Try(func(<%= type %>) (<%= type %>, error)) Optional<%= name %>
 	HandleErr(func(error) error) Optional<%= name %>
-	PrintErr() Optional<%= name %>
-	ToString() OptionalString
 
 <% methods.each do |m| %>  <%= m %>() Optional<%= name %>
 <% end %>}
@@ -51,27 +49,3 @@ func (n None<%= name %>) HandleErr(f func(error) error) Optional<%= name %> {
 	}
 }
 
-func (s Some<%= name %>) PrintErr() Optional<%= name %> {
-	return s
-}
-
-func (n None<%= name %>) PrintErr() Optional<%= name %> {
-	return n.HandleErr(func(err error) error {
-		println(err.Error())
-		return err
-	})
-}
-
-func (s Some<%= name %>) ToString() OptionalString {
-	<% if type != 'string' %>
-		return WrapString(s.value.ToString(), nil)
-	<% else %>
-		return WrapString(s.value, nil)
-	<% end %>
-}
-
-func (n None<%= name %>) ToString() OptionalString {
-	return NoneString{
-		err: n.err,
-	}
-}
