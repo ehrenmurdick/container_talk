@@ -9,6 +9,7 @@ import (
 
 type Document interface {
 	Content() string
+	SetContent(string) (Document, error)
 	ToString() string
 	Print() error
 	Save() error
@@ -26,6 +27,15 @@ func NewDocument(content string) Document {
 
 func (d document) Content() string {
 	return d.content
+}
+
+func (d document) SetContent(s string) (Document, error) {
+	if len(s) > 10 {
+		return nil, errors.New("tried to set document content over max length")
+	} else {
+		d.content = s
+		return d, nil
+	}
 }
 
 var tries int = 0

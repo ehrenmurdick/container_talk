@@ -15,20 +15,36 @@ import (
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	doc1 := entities.NewDocument("hello, world!")
+	doc0 := entities.NewDocument("document 1")
+	doc0, err := doc0.SetContent("not long")
+	if err != nil {
+		printError(err)
+	} else {
+		_, err = printDocument(doc0)
+		if err != nil {
+			printError(err)
+		} else {
+			_, err = saveDocument(doc0)
+			if err != nil {
+				printError(err)
+			}
+		}
+	}
+
+	doc1 := entities.NewDocument("document 2")
 	opt1 := optionals.WrapAny(doc1, nil)
-	op1.
+	opt1.
 		FlatMap(printAny).
 		FlatMap(saveAny).
-		HandleErr(HandleErr)
+		HandleErr(printError)
 
-	doc2 := entities.NewDocument("hello, world!")
+	doc2 := entities.NewDocument("document 3")
 	opt2 := optionals.WrapDocument(doc2, nil)
 
 	opt2.
 		FlatMap(printDocument).
 		FlatMap(saveDocument).
-		HandleErr(handleError)
+		HandleErr(printError)
 }
 
 func printDocument(d entities.Document) (entities.Document, error) {
@@ -41,7 +57,7 @@ func saveDocument(d entities.Document) (entities.Document, error) {
 	return d, err
 }
 
-func handleError(err error) error {
+func printError(err error) error {
 	println(err.Error())
 	return err
 }
@@ -51,8 +67,7 @@ func saveAny(i interface{}) (interface{}, error) {
 	doc, ok := i.(entities.Document)
 
 	if ok {
-		doc.Save()
-		return doc, nil
+		return doc, doc.Save()
 	} else {
 		return nil, errors.New("not a document")
 	}

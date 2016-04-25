@@ -1,6 +1,8 @@
 package optionals
 
 type OptionalAny interface {
+	FlatMap(f func(interface{}) (interface{}, error)) OptionalAny
+	HandleErr(f func(error) error) OptionalAny
 }
 
 type SomeAny struct {
@@ -28,4 +30,14 @@ func (s SomeAny) FlatMap(f func(interface{}) (interface{}, error)) OptionalAny {
 
 func (n NoneAny) FlatMap(f func(interface{}) (interface{}, error)) OptionalAny {
 	return n
+}
+
+func (s SomeAny) HandleErr(f func(error) error) OptionalAny {
+	return s
+}
+
+func (n NoneAny) HandleErr(f func(error) error) OptionalAny {
+	return NoneAny{
+		err: f(n.err),
+	}
 }
