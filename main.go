@@ -31,19 +31,43 @@ func main() {
 		}
 	}
 
+	println("\n\n")
+
 	doc1 := entities.NewDocument("document 2")
 	opt1 := optionals.WrapAny(doc1, nil)
 	opt1.
+		Try(renameAny).
 		Try(printAny).
 		Try(saveAny).
 		HandleErr(printError)
 
+	println("\n\n")
+
 	doc2 := entities.NewDocument("document 3")
 	opt2 := optionals.WrapDocument(doc2, nil)
 	opt2.
+		Try(renameDocument).
 		Try(printDocument).
 		Try(saveDocument).
 		HandleErr(printError)
+
+	println("\n\n")
+
+	doc3 := entities.NewDocument("document 4")
+	opt3 := optionals.WrapDocument(doc3, nil)
+	opt3.
+		Print().
+		Save().
+		HandleErr(printError)
+}
+
+func renameAny(i interface{}) (interface{}, error) {
+	doc, ok := i.(entities.Document)
+	if !ok {
+		return nil, errors.New("not a document")
+	}
+
+	return doc.SetContent("too long of a document content")
 }
 
 func printDocument(d entities.Document) (entities.Document, error) {
@@ -52,8 +76,7 @@ func printDocument(d entities.Document) (entities.Document, error) {
 }
 
 func saveDocument(d entities.Document) (entities.Document, error) {
-	err := d.Save()
-	return d, err
+	return d, d.Save()
 }
 
 func printError(err error) error {
@@ -82,4 +105,8 @@ func printAny(i interface{}) (interface{}, error) {
 	} else {
 		return nil, errors.New("not a document")
 	}
+}
+
+func renameDocument(d entities.Document) (entities.Document, error) {
+	return d.SetContent("too long of a string")
 }
